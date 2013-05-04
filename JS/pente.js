@@ -269,8 +269,7 @@ function getCursorPosition(e) {
 
 function drawBoard() { // draws all objects on the canvas
 
-    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
-
+    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight)
     gDrawingContext.beginPath();
     
     /* vertical lines */
@@ -286,7 +285,8 @@ function drawBoard() { // draws all objects on the canvas
     }
     
     /* draw it! */
-    gDrawingContext.strokeStyle = "#ccc";
+    
+	gDrawingContext.strokeStyle = "blue";
     gDrawingContext.stroke();
 	
 	for (var i=0; i<arrSize; i++){
@@ -312,11 +312,11 @@ function drawPiece(p, player) { //draws the piece on the board, takes in a cell,
     gDrawingContext.strokeStyle = "#000";
     gDrawingContext.stroke();
     if (player=='1') {
-		gDrawingContext.fillStyle = "#000";
+		gDrawingContext.fillStyle = "#8bbc5e";
 		gDrawingContext.fill();
     }
 	else{
-		gDrawingContext.fillStyle = "#fff";
+		gDrawingContext.fillStyle = "#f4fa53";
 		gDrawingContext.fill();
     }
 }
