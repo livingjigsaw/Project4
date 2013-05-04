@@ -135,7 +135,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	var count = 1;
 	var loc = position;
 	var locRow = coords.row;
-	var locCol = coords.col;
+	var locCol = coords.column;
 	while(((gBoard[loc - 20] == player) && (locRow-1 > -1)) && (locCol-1 > -1)){
 		count +=1;
 		loc -=20;
@@ -144,7 +144,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	}
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while(((gBoard[loc + 20] == player) && (locRow+1 < 19)) && (locCol+1 <19)){
 		count +=1;
 		loc +=20;
@@ -159,7 +159,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	count = 1;
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc - 19] == player) && (locRow-1 > -1)){
 		count +=1;
 		loc -=19;
@@ -167,7 +167,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	}
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc + 19] == player) && (locRow+1 < 19)){
 		count +=1;
 		loc +=19;
@@ -181,7 +181,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	count = 1;
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc - 18] == player) && (locRow-1 > -1) && (locCol+1 < 19)){
 		count +=1;
 		loc -=18;
@@ -190,7 +190,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	}
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc + 18] == player) && (locRow+1 < 19) && (locCol-1 > -1)){
 		count +=1;
 		loc +=18;
@@ -205,7 +205,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	count = 1;
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc - 1] == player) && (locCol-1 > -1)){
 		count +=1;
 		loc -=1;
@@ -213,7 +213,7 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 	}
 	loc = position;
 	locRow = coords.row
-	locCol = coords.col
+	locCol = coords.column
 	while((gBoard[loc + 1] == player) && (locCol+1 < 19)){
 		count +=1;
 		loc +=1;
@@ -229,15 +229,20 @@ function checkPente(coords, position, player){ // returns true if there is a fiv
 }
 
 function checkGameOver(a,b,c){
-	if(capCountMe > 4 )
+	if(capCountMe > 4 ){
 		alert("You Win!");
-	else if(capCountThem > 4)
+		gGameInProgress = false;
+	}
+	else if(capCountThem > 4){
 		alert("You Lose :(");
+		gGameInProgress = false;
+	}
 	else if(checkPente(a,b,c)){
 		if(c==playerNum)
 			alert("You Win!");
 		else
 			alert("You Lose :(");
+		gGameInProgress = false;
 		}
 		
 }
@@ -317,54 +322,56 @@ function drawPiece(p, player) { //draws the piece on the board, takes in a cell,
 }
 
 function penteOnClick(e){ 
-//converts a cell's row and column to an index in gBoard, then puts a piece there
-	if(playerNum == currentTurn){ // this will only let one player place at a time
-		var cell = getCursorPosition(e);
-		var position = cell.row*kBoardHeight + cell.column;
-		if(gBoard[position] != '0'){
-			//You must place a piece on an empty location
-		}
-		else{
-		gBoard[position] = playerNum; 
-		captures(cell, position, playerNum);
-		checkGameOver(cell, position, playerNum);
-		drawBoard();
+	if(gGameInProgress == true){
+	//converts a cell's row and column to an index in gBoard, then puts a piece there
+		if(playerNum == currentTurn){ // this will only let one player place at a time
+			var cell = getCursorPosition(e);
+			var position = cell.row*kBoardHeight + cell.column;
+			if(gBoard[position] != '0'){
+				//You must place a piece on an empty location
+			}
+			else{
+			gBoard[position] = playerNum; 
+			captures(cell, position, playerNum);
+			checkGameOver(cell, position, playerNum);
+			drawBoard();
 
-		if(playerNum=='1'){
-			currentTurn='2';
-		}
+			if(playerNum=='1'){
+				currentTurn='2';
+			}
+			else{
+				currentTurn='1'
+			}
+			moveInsert(position, currentTurn);
+			}
+		 }
 		else{
-			currentTurn='1'
+			//wait your turn!
 		}
-		moveInsert(position, currentTurn);
+		if (currentTurn != playerNum){
+			var otherNum;
+			var checker = setInterval( function (){
+				currentTurn = $.ajax({url: "http://localhost/php/checkTurn.php", async: false}).responseText;
+					if (currentTurn==playerNum){
+						var otherLocS = $.ajax({url: "http://localhost/php/pullLocation.php", async: false}).responseText;
+						var otherLoc = parseInt(otherLocS);
+						console.log(otherLocS, otherLoc);
+						if(playerNum=='1'){
+							otherNum ='2';
+						}
+						else{
+							otherNum='1';
+						}
+						gBoard[otherLoc]=otherNum;
+						var otherCell = new Cell(Math.floor(otherLoc/kBoardHeight), otherLoc%kBoardHeight);
+						captures(otherCell, otherLoc, gBoard[otherLoc]);
+						checkGameOver(otherCell, otherLoc, otherNum);
+						drawBoard();
+						console.log("the cell", otherCell);
+						clearInterval(checker);
+					}
+			},1000);
 		}
-	 }
-	else{
-		//wait your turn!
-	}
-	if (currentTurn != playerNum){
-		var otherNum;
-		var checker = setInterval( function (){
-			currentTurn = $.ajax({url: "http://localhost/php/checkTurn.php", async: false}).responseText;
-				if (currentTurn==playerNum){
-					var otherLocS = $.ajax({url: "http://localhost/php/pullLocation.php", async: false}).responseText;
-					var otherLoc = parseInt(otherLocS);
-					console.log(otherLocS, otherLoc);
-					if(playerNum=='1'){
-						otherNum ='2';
-					}
-					else{
-						otherNum='1';
-					}
-					gBoard[otherLoc]=otherNum;
-					var otherCell = new Cell(Math.floor(otherLoc/kBoardHeight), otherLoc%kBoardHeight);
-					captures(otherCell, otherLoc, gBoard[otherLoc]);
-					checkGameOver(otherCell, otherLoc, otherNum);
-					drawBoard();
-					console.log("the cell", otherCell);
-					clearInterval(checker);
-				}
-		},1000);
 	}
 }
 
@@ -387,12 +394,11 @@ function newGame() {
 	{
 		gBoard[i] = '0'; 
 	};
-    gGameInProgress = true; // another artifact from source code
+    gGameInProgress = true; 
     drawBoard();
 }
 
-function endGame() { // another artifact from source code
-    gSelectedPieceIndex = -1;
+function endGame() { 
     gGameInProgress = false;
 }
 
