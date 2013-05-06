@@ -313,10 +313,12 @@ function drawPiece(p, player) { //draws the piece on the board, takes in a cell,
     gDrawingContext.stroke();
     if (player=='1') {
 		gDrawingContext.fillStyle = "#8bbc5e";
+		gDrawingContext.globalAlpha=0.8;
 		gDrawingContext.fill();
     }
 	else{
-		gDrawingContext.fillStyle = "#f4fa53";
+		gDrawingContext.fillStyle = "#ff822f";
+		gDrawingContext.globalAlpha=0.8;
 		gDrawingContext.fill();
     }
 }
