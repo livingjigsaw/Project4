@@ -9,6 +9,7 @@ var arrSize = kBoardWidth * kBoardHeight;
 var gCanvasElement;
 var gDrawingContext;
 var gPattern;
+window.addEventListener("load", checkLogin, false);
 
 var gBoard = new Array(); //this holds data from the entire board
 			/* 
@@ -269,7 +270,7 @@ function getCursorPosition(e) {
 
 function drawBoard() { // draws all objects on the canvas
 
-    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight)
+    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
     gDrawingContext.beginPath();
     
     /* vertical lines */
@@ -283,10 +284,9 @@ function drawBoard() { // draws all objects on the canvas
 	gDrawingContext.moveTo(0, 0.5 + y);
 	gDrawingContext.lineTo(kPixelWidth, 0.5 +  y);
     }
-    
+ 
     /* draw it! */
-    
-	gDrawingContext.strokeStyle = "blue";
+    gDrawingContext.strokeStyle = "blue";
     gDrawingContext.stroke();
 	
 	for (var i=0; i<arrSize; i++){
@@ -351,9 +351,9 @@ function penteOnClick(e){
 		if (currentTurn != playerNum){
 			var otherNum;
 			var checker = setInterval( function (){
-				currentTurn = $.ajax({url: "http://localhost/php/checkTurn.php", async: false}).responseText;
+				currentTurn = $.ajax({url: "/ajproject4/php/checkTurn.php", async: false}).responseText;
 					if (currentTurn==playerNum){
-						var otherLocS = $.ajax({url: "http://localhost/php/pullLocation.php", async: false}).responseText;
+						var otherLocS = $.ajax({url: "/ajproject4/php/pullLocation.php", async: false}).responseText;
 						var otherLoc = parseInt(otherLocS);
 						console.log(otherLocS, otherLoc);
 						if(playerNum=='1'){
@@ -409,7 +409,7 @@ function initGame() {
 	document.getElementById("wrapper").appendChild(canvasElement);
 	
 //the initial AJAX will go here to determine playerNum and 
-	playerNum = $.ajax({url: "http://localhost/php/setPlayers.php", async: false}).responseText;
+	playerNum = $.ajax({url: "/ajproject4/php/setPlayers.php", async: false}).responseText;
 	alert(playerNum);
 	//to create a row in the game table that stores an auto_inc id, date, player_one, player_two;
 

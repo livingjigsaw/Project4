@@ -1,36 +1,21 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="js/jquery.js"></script>
-		<script src="js/pente.js"></script>
-		<script src="js/ajax.js"></script>
-		<link rel = "stylesheet" type = "text/css" href = "css\styles.css">
+		<script src="JS/facebook.js"></script>
+		<script src="JS/jquery.js"></script>
+		<script src="JS/pente.js"></script>
+		<script src="JS/ajax.js"></script>
+		<link rel="stylesheet" type="text/css" href="css\styles.css" />
+		</style>
 	</head>
 	<body onLoad="initGame()">
 		<header>
-			
+			<div id="fb-root">
+				<button onclick="logOut()">Log Out</button>
+				<div id="msgBox">Player 1: &nbsp; Player 2: &nbsp;</div>
+			</div>
 		</header>
-		<div id="wrapper">
-		</div><br>
-		<style>
-header
-{
-	height: 35px;
-	width: 100%;
-	margin: 0;
-	background-color:black;
-}
-
-#wrapper
-{
-	text-align:center;
-}
-
-canvas
-{
-	border: black 1px solid;
-	margin: 0 auto 0 auto;
-}
-		</style>
+			<div id="wrapper">
+			</div>
 	</body>
 </html>
