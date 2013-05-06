@@ -14,7 +14,7 @@ window.fbAsyncInit = function() {
 			  FB.Event.subscribe('auth.authResponseChange', function(response) {
 				// Here we specify what we do with the response anytime this event occurs. 
 				if (response.status === 'connected') {
-				  // In this case, we're handling the situation where they have logged in to the app.
+				 // In this case, we're handling the situation where they have logged in to the app.
 				} else if (response.status === 'not_authorized') {
 				  // In this case, the person is logged into Facebook, but not into the app, so we call
 				  // FB.login() to prompt them to do so. 
@@ -24,6 +24,7 @@ window.fbAsyncInit = function() {
 				  // result from direct user interaction (such as a mouse click)
 				  // (2) it is a bad experience to be continually prompted to login upon page load.
 				  window.location="../";
+				  FB.login();
 				} else {
 				  // In this case, the person is not logged into Facebook, so we call the login() 
 				  // function to prompt them to do so. Note that at this stage there is no indication
@@ -31,6 +32,7 @@ window.fbAsyncInit = function() {
 				  // dialog right after they log in to Facebook. 
 				  // The same caveats as above apply to the FB.login() call here.
 				 window.location="../";
+				  FB.login();
 				}
 			  });
 			  };
